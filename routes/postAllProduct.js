@@ -1,36 +1,56 @@
 // app.js
 import express from 'express';
-import upload from "../middlewere/multer.js";
+import fs from "fs"
+import {upload} from "../middlewere/multer.js"
 import verifyToken from '../middlewere/verifyToken.js';
-import { uploadToCloudinary } from '../Utills/uploder.js';
+import uploadToCloudinary from "../Utills/uploder.js"
 import AddProducts from "../models/AddProduct.js";
 
 const router = express.Router();
 
-router.post('/', verifyToken, upload.array('images', 3), async (req, res) => {
+router.post('/',  upload.array('files', 5), async (req, res) => {
     const { authorization } = req.headers;
     const token = authorization?.split(" ")[1];
 
     try {
-        let firstImageOb = req.files[0];
-        let secondImageOb = req.files[1];
-        let thirdImageOb = req.files[2];
 
-        const firstImage = firstImageOb ? await uploadToCloudinary(firstImageOb) : null;
-        const secondImage = secondImageOb ? await uploadToCloudinary(secondImageOb) : null;
-        const thirdImage = thirdImageOb ? await uploadToCloudinary(thirdImageOb) : null;
 
+        const uploadedFiles = req.files;
+        let fileUrls = [];
+
+
+
+
+        if (uploadedFiles && uploadedFiles.length > 0) {
+            try {
+              for (const file of uploadedFiles) {
+                const cloudinaryUrl = await uploadToCloudinary(file.path);
+                fileUrls.push(cloudinaryUrl);
+                fs.unlinkSync(file.path);
+              }
+            } catch (error) {
+              console.error(error);
+              uploadedFiles.forEach(file => fs.unlinkSync(file.path));
+              return res.status(500).send({ message: 'Error uploading files' });
+            }
+          }
+
+
+
+
+
+      
         let { title, description, price, rating } = req.body;
 
         // Populate the images array with the URLs of the uploaded images
-        let images = [firstImage, secondImage, thirdImage];
+        // let images = [firstImage, secondImage, thirdImage];
 
         let data = {
             title,
             description,
             price,
             rating,
-            images,
+            images: fileUrls,
         };
 
         console.log(data);

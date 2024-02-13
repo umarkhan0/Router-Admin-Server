@@ -5,19 +5,26 @@ const AddProduct = new mongoose.Schema(
         title: {
             type: String,
         },
-        discription: {
-            type: String,  
-        },
+
         price: {
             type: Number,
+            required: true,
         },
-       images: {
-type: Array,
-       },
+        images: [
+            {
+                type: String,
+            },
+        ],
         rating: {
             type: Number,
-            
-        }
+            required: true,
+
+        },
+        description: {
+            type: String,
+            required: true,
+
+        },
     },
     {
         timestamps: true,
