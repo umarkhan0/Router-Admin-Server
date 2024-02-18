@@ -1,10 +1,10 @@
 // app.js
 import express from 'express';
 import fs from "fs"
-import {upload} from "../middlewere/multer.js"
-import verifyToken from '../middlewere/verifyToken.js';
-import uploadToCloudinary from "../Utills/uploder.js"
-import AddProducts from "../models/AddProduct.js";
+import {upload} from "../../middlewere/multer.js"
+import verifyToken from '../../middlewere/verifyToken.js';
+import uploadToCloudinary from "../../Utills/uploder.js"
+import AddProducts from "../../models/AddProduct.js";
 
 const router = express.Router();
 
