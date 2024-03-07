@@ -13,6 +13,7 @@ const AddProduct = new mongoose.Schema(
         images: [
             {
                 type: String,
+            required: true,
             },
         ],
         rating: {
